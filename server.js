@@ -12,6 +12,7 @@ const app = express();
 
 const allowedOrigins = [
   'http://localhost:5173',
+  'https://bati-connect-sg6p.onrender.com',
   process.env.FRONTEND_URL,
   process.env.FRONTEND_URL_WWW,
 ].filter(Boolean);
