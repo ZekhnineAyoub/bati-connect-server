@@ -4,7 +4,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const Brevo = require('@getbrevo/brevo');
+const { BrevoClient } = require('@getbrevo/brevo');
 const axios = require('axios');
 const Contact = require('./models/Contact');
 
@@ -48,13 +48,9 @@ mongoose
 /*
  * Configuration Brevo
  */
-
-const apiInstance = new Brevo.TransactionalEmailsApi();
-
-apiInstance.setApiKey(
-  Brevo.TransactionalEmailsApiApiKeys.apiKey,
-  process.env.BREVO_API_KEY
-);
+const apiInstance = new BrevoClient({
+  apiKey: process.env.BREVO_API_KEY,
+});
 
 /*
  * Protège les emails HTML contre l’injection de balises.
@@ -83,7 +79,9 @@ async function sendEmail(to, subject, htmlContent) {
   };
 
   try {
-    const response = await apiInstance.sendTransacEmail(emailData);
+    const response =
+      await apiInstance.transactionalEmails.sendTransacEmail(emailData);
+
     console.log(`✅ Email envoyé à ${to}`);
     return response;
   } catch (error) {
@@ -138,7 +136,8 @@ app.get('/', (req, res) => {
  * Enregistrement d’une demande de devis
  */
 app.post('/api/contact', async (req, res) => {
-     console.log('\n================================');
+  console.log('\n================================');
+
   try {
     const {
       fullName,
@@ -152,7 +151,8 @@ app.post('/api/contact', async (req, res) => {
       description,
     } = req.body;
 
-     console.log('BODY REÇU :', req.body);
+    console.log('BODY REÇU :', req.body);
+
     if (
       !fullName ||
       !phone ||
@@ -388,7 +388,6 @@ app.post('/api/contact', async (req, res) => {
      * allSettled évite de répondre "erreur" au prospect lorsque
      * MongoDB a réussi, mais qu’un email ou Google Sheets a échoué.
      */
-    
     const externalServices = await Promise.allSettled([
       sendToGoogleSheet({
         fullName,
@@ -418,7 +417,8 @@ app.post('/api/contact', async (req, res) => {
         htmlAdmin
       ),
     ]);
-/*
+
+    /*
     externalServices.forEach((result, index) => {
       if (result.status === 'rejected') {
         const services = [
@@ -430,7 +430,6 @@ app.post('/api/contact', async (req, res) => {
         console.error(`❌ Échec ${services[index]} :`, result.reason);
       }
     });
-
     */
 
     return res.status(201).json({
