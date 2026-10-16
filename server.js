@@ -70,10 +70,7 @@ function escapeHtml(value = '') {
 async function sendEmail(to, subject, htmlContent) {
   const emailData = {
     to: [{ email: to }],
-    sender: {
-      name: process.env.SENDER_NAME,
-      email: process.env.SENDER_EMAIL,
-    },
+    sender: { name: 'VexoLead', email: 'vexolead@gmail.com' },
     subject,
     htmlContent,
   };
