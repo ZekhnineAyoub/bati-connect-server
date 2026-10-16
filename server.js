@@ -49,14 +49,12 @@ mongoose
  * Configuration Brevo
  */
 
-/*
 const apiInstance = new Brevo.TransactionalEmailsApi();
 
 apiInstance.setApiKey(
   Brevo.TransactionalEmailsApiApiKeys.apiKey,
   process.env.BREVO_API_KEY
 );
-*/
 
 /*
  * Protège les emails HTML contre l’injection de balises.
@@ -390,7 +388,7 @@ app.post('/api/contact', async (req, res) => {
      * allSettled évite de répondre "erreur" au prospect lorsque
      * MongoDB a réussi, mais qu’un email ou Google Sheets a échoué.
      */
-    /*
+    
     const externalServices = await Promise.allSettled([
       sendToGoogleSheet({
         fullName,
@@ -415,12 +413,12 @@ app.post('/api/contact', async (req, res) => {
       ),
 
       sendEmail(
-        process.env.ADMIN_EMAIL,
+        'ayoubzekhnine96@gmail.com',
         `🔥 Nouvelle demande de devis : ${fullName}`,
         htmlAdmin
       ),
     ]);
-
+/*
     externalServices.forEach((result, index) => {
       if (result.status === 'rejected') {
         const services = [
